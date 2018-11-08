@@ -12,5 +12,6 @@
 |-|-|
 | Requirement | 项目需求 |
 | Code | 代码 |
+| Others | 学习资料等 |
 
 ---
