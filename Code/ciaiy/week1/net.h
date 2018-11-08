@@ -10,7 +10,7 @@
 #define NO_ERROR 0
 
 /* 错误处理函数 */
-void err(int line);
+void err(char *err_msg);
 
 /* 加了错误处理的socket函数 */
 int Socket(int domain, int type, int protocol);
