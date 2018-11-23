@@ -10,10 +10,10 @@ class mytime
         mytime(int hours, int minutes);
         mytime operator+(const mytime &data) const;
         friend void operator<<(std::ostream &os, const mytime &Time);
-        int getHours();
-        int getMinuters();
-        void showTime();
-        void testFun(const mytime &timeOther);
+        int getHours() const;
+        int getMinuters() const;
+        void showTime() const;
+        operator std::string() const;
     private:
         int hours;
         int minuters;

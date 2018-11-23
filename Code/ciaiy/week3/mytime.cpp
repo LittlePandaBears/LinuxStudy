@@ -13,17 +13,18 @@ mytime::mytime(int hours, int minuters)
     this->minuters = minuters;
 }
 
-int mytime::getHours()
+int mytime::getHours() const
 {
     return this->hours;
 }
 
-int mytime::getMinuters()
+int mytime::getMinuters() const
 {
     return this->minuters;
 }
 
-void operator<<(std::ostream &os, const mytime &Time) {
+void operator<<(std::ostream &os, const mytime &Time)
+{
     os << Time.hours << ":" << Time.minuters;
 }
 
@@ -37,7 +38,16 @@ mytime mytime::operator+(const mytime &otherTime) const
     return sum;
 }
 
-void mytime::showTime()
+void mytime::showTime() const
 {
     std::cout << hours << " h " << minuters << " min " << std::endl;
+}
+
+mytime::operator std::string() const
+{
+    std::cout << "string start " << std::endl;
+    std::string str = std::to_string(this->hours) + ":" + std::to_string(this->minuters); 
+    std::cout << "string ends : " << str << std::endl;
+
+    return str;
 }

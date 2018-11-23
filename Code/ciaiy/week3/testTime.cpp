@@ -8,7 +8,9 @@ int main(void)
     mytime time2 = mytime(3, 4);
     mytime sum = time1 + time2;
 
-    std::cout << sum;
+    std::string str = sum;
+    std::cout << str << std::endl;
+    
 
     return 0;
 }

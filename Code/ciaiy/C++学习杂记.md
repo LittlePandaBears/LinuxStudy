@@ -7,8 +7,6 @@
 
 ---
 
-[toc]
-
 ## 初识类和对象
 
 ### 为什么有些地方的函数声明加着const
@@ -21,7 +19,7 @@
 
 ### cout<<timeSum<<endl 为什么会报错
 
-虽然我们使用 frined void operater<<(std::ostream &os, t_time &time) 这个友元函数了， 但是值得注意的是， 在此函数的实现中， 我们使用的是``os<<time.hours<<time.minutes``。因此``cout<<timeSum;``这句话是没有问题的， 但是加上endl就有问题了， 我们并``没有定义t_time和endl之间的<< 重载``。
+虽然我们使用 frined void operator<<(std::ostream &os, t_time &time) 这个友元函数了， 但是值得注意的是， 在此函数的实现中， 我们使用的是``os<<time.hours<<time.minutes``。因此``cout<<timeSum;``这句话是没有问题的， 但是加上endl就有问题了， 我们并``没有定义t_time和endl之间的<< 重载``。
 
 **``改进方式 : ``** 我们只需要将返回值改变为``ostream``就可以实现``cout<<timeSum<<endl``
 
@@ -61,7 +59,8 @@
     }
     ```
 
+### 为什么一个类的方法中， 可以访问参数(数据类型为该类)的私有变量
 
-
-
+因为C++的``访问控制是class=level``， 而不是object-level
+对于同一个类， 他们的访问控制权限是一样的， 只要是成员方法， 且有同类的参数， 都可以访问其私有变量
 
