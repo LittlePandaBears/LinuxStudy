@@ -6,11 +6,11 @@
 class constucter {
     public:
         constucter();
-        constucter(int n = 0) {
-            std::cout << "(int n  = " << n << ")构造函数" << std::endl;
-        }
+        constucter(std::string name);
         ~constucter();
         void getOtherObjectPrivateValue(const constucter &otherObject) const;
+        constucter returnType1();
+        std::string name;
 
     private:
         int pri_val;
