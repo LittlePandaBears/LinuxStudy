@@ -28,14 +28,17 @@
 - selenium get_attribute()
 
     我们可以使用这个函数来获取标签元素的内容
+
     |||
     |:-:|:-:|
     |'textContent'|获取内容|
     |'innerHTML'|获取元素内所有HTML|
     |'outerHTML'|获取选中元素的HTML|
+    
 - browser.find_element_by_*()
 
     我们可以使用这个函数来定位标签元素
+    
     |||
     |:-:|:-:|
     |by_id|可以通过html里的id定位|
