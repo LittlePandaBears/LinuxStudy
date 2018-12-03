@@ -107,7 +107,7 @@ int main(void)
     insertArc(adj, 1, 4, NOSET);
     insertArc(adj, 2, 0, NOSET);
     insertArc(adj, 3, 2, NOSET);
-    // insertArc(adj, 4, 2, NOSET);
+    insertArc(adj, 4, 2, NOSET);
     insertArc(adj, 4, 1, NOSET);
 
     findLoad(adj, 4, 0);
