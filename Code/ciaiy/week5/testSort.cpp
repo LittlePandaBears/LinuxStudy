@@ -3,8 +3,7 @@
 int main(void) {
     SORT s;
     s.showList();
-    s.sort(2);
+    s.sort(4);
     s.showList();
-    s.sort(3);
     return 0;
 }
