@@ -2,8 +2,17 @@
 
 int main(void) {
     SORT s;
-    s.showList();
-    s.sort(4);
-    s.showList();
+    cout<<endl;
+    bool flag = true;
+    // for(int i = 0; i < 10; i++) {
+
+        s.showList();
+        s.sort(SORT::FS);
+        flag = s.check();
+        if(flag == false) {
+            cout << "false" << endl;
+            s.showList();
+        }
+        s.showList();//) }
     return 0;
 }

@@ -2,15 +2,26 @@
 #include <cstdlib>
 #include <cstring>
 
+
 SORT::SORT() {
     srand(time(0));
     for(int i = 0; i < LIST_LEN; i++) {
         list[i] = rand() % LIST_LEN;
     }
+    setMap(list);
 }
 
 SORT::SORT(int list[]) {
     memcpy(list, this->list, sizeof(int) * LIST_LEN);
+    setMap(list);
+}
+
+void SORT::randList() {
+    srand(time(0));
+    for(int i = 0; i < LIST_LEN; i++) {
+        list[i] = rand() % LIST_LEN;
+    }
+    setMap(list);
 }
 
 void SORT::showList() {
@@ -33,6 +44,108 @@ void SORT::sort(int type) {
     if(type == SS) {
         shellSort();
     }
+    if(type == BS) {
+        bubbleSort();
+    } 
+    if(type == FS) {
+        fastSort(0, LIST_LEN - 1);
+    }
+}
+
+void SORT::fastSort(int start, int end) {
+    int key = list[start];
+    int lindex = start;
+    int rindex = end;
+    int temp = list[lindex];
+
+    if(lindex >= rindex) {
+        return;
+    }
+    
+    while(lindex != rindex) {
+        while(list[rindex] >= key && lindex < rindex) {
+            rindex--;
+        }
+        if(rindex > lindex) {
+            list[lindex] = list[rindex];
+        }
+        while(list[lindex] <= key && lindex < rindex) {
+            lindex++;
+        }
+        if(lindex < rindex) {
+            list[rindex] = list[lindex];
+        }
+    }
+    list[lindex] = temp;
+    fastSort(start, lindex - 1);
+    fastSort(lindex + 1, end);
+}
+
+
+void SORT::setMap(int list[]) {
+    for(int i = 0; i < LIST_LEN; i++) {
+        keyValue[i] = 0;
+    }
+
+    for(int i = 0; i < LIST_LEN; i++) {
+        keyValue[list[i]]++;
+    }  
+}
+
+bool SORT::check() {
+    map<int, int> temp;
+    int value = list[0];
+    for(int i = 0; i < LIST_LEN; i++) {
+        temp[list[i]]++;
+    }  
+    
+    for(int i = 0; i < LIST_LEN; i++) {
+        int key1 = keyValue[i];
+        int key2 = temp[i];
+        if(key1 != key2) {
+            cout << "flag 1" << key1 << " " << key2<< endl;
+            return false;
+        }
+    }
+
+    for(int i = 0; i > LIST_LEN; i++) {
+        if(list[i] > value) {
+            value = list[i];
+        }else if(value > list[i]) {
+            cout << "flag 2" << endl;
+            return false;
+        }
+    }
+    return true;
+}
+
+void SORT::mergeSort(int begin, int end)
+{
+    if (end-begin < 2) return;
+    int mid = (begin+end)>>1;
+    mergeSort(begin,mid);
+    mergeSort(mid,end);
+    mergeSortCore(begin,mid,end);
+}
+
+void SORT::mergeSortCore(int begin, int mid, int end) {
+    int i=begin, j=mid, k=0;
+    int *temp = new int[end-begin];
+    for(; i<mid && j<end; temp[k++]=(list[i]<list[j]?list[i++]:list[j++]));
+    for(; i<mid; temp[k++]=list[i++]);
+    for(; j<end; temp[k++]=list[j++]);
+    for(i=begin, k=0; i<end; list[i++]=temp[k++]);
+    free(temp);
+}
+
+void SORT::bubbleSort() {
+    for(int i = LIST_LEN - 1; i >= 0; i--) { 
+        for(int j = 0; j < i; j++) {
+            if(list[j] > list[j + 1]) {
+                swap(list[j], list[j + 1]);
+            }
+        }
+    }
 }
 
 int SORT::binarySearch(int len, int value) {
@@ -54,7 +167,7 @@ void SORT::binaryInsertionSort() {
         swap(list[0], list[1]);
     }
 
-    for(int i = 2; i < LIST_LEN + 1; i++) {
+    for(int i = 2; i < LIST_LEN; i++) {
             
             // find
             int index = binarySearch(i - 1, list[i]);
@@ -118,7 +231,6 @@ void SORT::shellSort() {
 
         for(int len = 0; len < increment; len ++) {
             for(int i = len + increment; i < LIST_LEN; i += increment) {
-                // cout << "i = " << i << endl;
                 index = i;
                 temp = list[i];
                 for(int j = i - increment; j >= 0; j -= increment) {
@@ -127,24 +239,8 @@ void SORT::shellSort() {
                         index = j;
                     }
                 }
-
                 list[index] = temp;
-                // // debug
-                // for(int x = len; x <= i; x += increment) {
-                //     cout << list[x] << " ";
-                // }
-                // cout<<endl;
             }
-
-            // // debug
-            // cout << "doing increment : " << increment << ":";
-            // showList();
-        }
-        
-
-
-        for(int i = 0; i < LIST_LEN; i++) {
-
         }
     }
 }
