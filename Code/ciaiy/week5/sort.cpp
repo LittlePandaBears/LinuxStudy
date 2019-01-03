@@ -17,7 +17,7 @@ SORT::SORT(int list[]) {
 }
 
 void SORT::randList() {
-    srand(time(0));
+
     for(int i = 0; i < LIST_LEN; i++) {
         list[i] = rand() % LIST_LEN;
     }
@@ -50,6 +50,38 @@ void SORT::sort(int type) {
     if(type == FS) {
         fastSort(0, LIST_LEN - 1);
     }
+    if(type == MS) {
+        mergeSort(0, LIST_LEN);
+    }
+    if(type == HS) {
+        heapSort(LIST_LEN);
+    }
+}
+
+void SORT::initHeap(int len) {
+    bool flag = true;
+    while(flag) {
+        for(int i = len - 1; i >= 1 ; i--) {
+            int parentIndex = (i + 1) / 2 - 1;
+            if(list[i] > list[parentIndex]) {
+                swap(list[i], list[parentIndex]);
+                break;
+            }
+
+            if(i == 1 && list[1] <= list[0]) {
+                flag = false;
+            }
+        }
+    }
+}
+
+void SORT::heapSort(int len) {
+    if(len == 1) {
+        return ;
+    }
+    initHeap(len);
+    swap(list[len - 1], list[0]);
+    heapSort(len - 1);
 }
 
 void SORT::fastSort(int start, int end) {
@@ -122,7 +154,7 @@ bool SORT::check() {
 void SORT::mergeSort(int begin, int end)
 {
     if (end-begin < 2) return;
-    int mid = (begin+end)>>1;
+    int mid = (begin+end)/2;
     mergeSort(begin,mid);
     mergeSort(mid,end);
     mergeSortCore(begin,mid,end);
