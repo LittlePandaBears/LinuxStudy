@@ -4,7 +4,7 @@
 #include <iostream>
 
 class A {
-    public :
+    public : 
         A() {};
         ~A() {};
         virtual void Fun() {
