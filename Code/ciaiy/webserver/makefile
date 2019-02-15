@@ -1,0 +1,2 @@
+test_threadpool2 : thread_pool2.h  thread_pool2.cpp locker.h locker.cpp rwlocker.h rwlocker.cpp  conder.h conder.cpp test_threadpool2.cpp 
+	g++ thread_pool2.h  thread_pool2.cpp locker.h locker.cpp rwlocker.h rwlocker.cpp  conder.h conder.cpp test_threadpool2.cpp  -o test_threadpool2 -lpthread
