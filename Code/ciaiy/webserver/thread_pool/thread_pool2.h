@@ -24,6 +24,7 @@ class thread_pool2{
 
         /* 有任务标志 */
         static conder has_task_cond;
+        static conder task_start;
 
         thread_pool2() {}
         void start_all(void *(* fun)(void *));
