@@ -17,7 +17,6 @@ int main(void) {
     for(int i = 0; i< 5; i++) {
         int *num = new int(i);
         pool.add_task((void *)num);
-        
     }
     sleep(100);
     return 0;

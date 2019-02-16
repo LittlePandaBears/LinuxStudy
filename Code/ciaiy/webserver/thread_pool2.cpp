@@ -91,9 +91,9 @@ void thread_pool2::add_task(void *arg) {
     /* 让正在执行工作的线程数目加一 */
     doing_num++;
     doing_num_lock.unlock();
-
+ 
     cout<<"已发送信号"<<endl;
     if(has_task_cond.signal() != 0) {
-        throw std::exception();
+        cout<<"some thing wrong"<<endl;
     }
 }
