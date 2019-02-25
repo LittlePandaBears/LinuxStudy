@@ -29,22 +29,28 @@ class thread_pool {
         locker task_queue_lock;
         /* 任务队列 */
         std::queue<T*> task_queue;
+        /* 终止变量 */
+        bool stop;
 
         /* 线程函数 */
         static void* work(void *arg);
         /* 线程执行函数 */
         void run(void);
+        /* 终止线程池 */
+        void stop_all();
 
 };
 
 template<typename T>
 void thread_pool<T>::run(void) {
-    while(true) {
+    while(stop == false) {
         if(has_work.wait()) {
             task_queue_lock.lock();
+            assert(task_queue.empty() == true);
             T *misson = task_queue.front();
             task_queue.pop();
             task_queue_lock.unlock();
+            assert(misson == NULL);
             misson->process();
         }
     }
@@ -59,10 +65,11 @@ void *thread_pool<T>::work(void *arg) {
 
 template<typename T>
 thread_pool<T>::thread_pool(int thread_num) : thread_num(thread_num) {
-    cout<<"thread_pool starting"<<endl;
     #ifdef DEBUG
+    cout<<"thread_pool starting"<<endl;
     cout<<"thread_num : " << thread_num << endl;
     #endif
+    stop = false;
     thread_list = new pthread_t[thread_num];
     for(int i = 0; i < thread_num; i++) {
         pthread_t thid;
@@ -83,3 +90,9 @@ void thread_pool<T>::add_task(T *request) {
     has_work.post();
 }
 #endif // !_THREAD_POLL_H_
+
+
+template<typename T>
+void thread_pool<T>::stop_all() {
+    stop = true;
+}

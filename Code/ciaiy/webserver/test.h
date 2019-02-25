@@ -8,6 +8,6 @@ class test{
     public :
         void process() {
             cout << "测试" << endl;
-            sleep(1);
+            sleep(100);
         }
 };
