@@ -21,9 +21,9 @@ locker thread_pool2::task_queue_lock;
 
 /* 有任务标志 */
 conder thread_pool2::has_task_cond;
+conder thread_pool2::task_start;
 
-
-void *(*thread_pool2::run)(void *arg);
+void *(*thread_pool2::run)(void *arg); 
 
 thread_pool2::thread_pool2(void *(* fun)(void *)) {
     this->start_all(fun);
@@ -42,9 +42,7 @@ void thread_pool2::start_all(void *(* fun)(void *)) {   // 运行所有线程
 void *thread_pool2::thread_fun(void *arg) { // 工作线程函数
     while(1) {
         void *run_arg;
-        #ifdef DEBUG
-        cout<<pthread_self()<<"等待"<<endl;
-        #endif
+
         has_task_cond.wait();
         /* 判断退出部分 */
 
@@ -52,16 +50,16 @@ void *thread_pool2::thread_fun(void *arg) { // 工作线程函数
         /* 取参数 */
         task_queue_lock.lock();
         if(!task_queue.empty()) {
-
-
-            
             /* 从队列中取参数 */
             run_arg = task_queue.front();
             task_queue.pop();
             task_queue_lock.unlock();        
         }else {
-            continue;
+            #ifdef DEBUG
+            cout<<"queue is empty"<<endl;
+            #endif
             task_queue_lock.unlock();
+            continue;
         }
         
 
@@ -90,10 +88,21 @@ void thread_pool2::add_task(void *arg) {
 
     /* 让正在执行工作的线程数目加一 */
     doing_num++;
+<<<<<<< HEAD:Code/ciaiy/webserver/thread_pool2.cpp
     doing_num_lock.unlock();
  
     cout<<"已发送信号"<<endl;
     if(has_task_cond.signal() != 0) {
         cout<<"some thing wrong"<<endl;
+=======
+    // #ifdef DEBUG
+    // cout<<"已发送信号"<<endl;
+    // #endif
+    // sleep(1);
+    if(has_task_cond.signal() != 0) {
+        exit(0);
+        throw std::exception();
+>>>>>>> 228b1c91be5fd99e75dacb8353b67ca4f187ab43:Code/ciaiy/webserver/thread_pool/thread_pool2.cpp
     }
+    doing_num_lock.unlock();
 }
