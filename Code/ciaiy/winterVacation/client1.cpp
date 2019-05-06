@@ -15,23 +15,18 @@ int main(void) {
     addr.sin_port = htons(2333);
     addr.sin_family = AF_INET;
     Connect(sockfd, (struct sockaddr *)&addr, addr_len);
-
     #ifdef _DEBUG_
         cout<<"连接成功"<<endl;
     #endif
 
-    char buf[204800];
-    int write_num;
-    for(int i = 0; i < 5; i++) {
-        for(int i = 0; i < 204800; i++) {
-            buf[i] = i % 10;
-        }
-        write_num = Write(sockfd, buf, 204800);
+    char buf[2048] = "testtesttesttest\r\n";
+    int len = strlen(buf);
+    int write_num;     
+        write_num = Write(sockfd, buf, len);
         
         #ifdef _DEBUG_
             cout<<"write "<<write_num<<"bytes"<<endl;    
         #endif
-    }
 
 
 
