@@ -88,7 +88,7 @@ void *httpd::run(void *arg) {
     }
     struct epoll_event ev;
     ev.data.fd = clientfd;
-    ev.events = EPOLLIN | EPOLLET | EPOLLONESHOT;
+    ev.events = EPOLL_CTL_DEL
     epoll_ctl(epfd, EPOLL_CTL_MOD, clientfd, &ev);
     return NULL;
 } 
