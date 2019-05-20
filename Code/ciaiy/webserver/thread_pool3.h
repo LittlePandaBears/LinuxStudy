@@ -5,6 +5,7 @@
 
 #include <queue>
 #include <iostream>
+#include <assert.h>
 #include <pthread.h>
 #include "locker.h"
 
@@ -17,7 +18,11 @@ template<typename T>
 class thread_pool {
     public:         
         thread_pool<T>(int thread_num = 8);
+        /* 添加任务 */
         void add_task(T* request);
+        /* 终止线程池 */
+        void stop_all();
+
     private:
         /* 线程池中线程的个数 */
         int thread_num;
@@ -36,22 +41,22 @@ class thread_pool {
         static void* work(void *arg);
         /* 线程执行函数 */
         void run(void);
-        /* 终止线程池 */
-        void stop_all();
-
 };
 
 template<typename T>
 void thread_pool<T>::run(void) {
-    while(stop == false) {
+    while(stop == false) { 
         if(has_work.wait()) {
-            task_queue_lock.lock();
-            assert(task_queue.empty() == true);
-            T *misson = task_queue.front();
+            task_queue_lock.lock(); // 加锁
+            if(task_queue.empty() == true){
+                task_queue_lock.unlock();   //  如果为空, 则跳过并解锁
+                continue;
+            }
+            T *misson = task_queue.front(); // 得到任务
             task_queue.pop();
-            task_queue_lock.unlock();
-            assert(misson == NULL);
-            misson->process();
+            task_queue_lock.unlock();   // 取完任务, 解锁
+            // assert(misson == NULL); // 防止下面语句报错
+            misson->process();  // 运行任务的process函数
         }
     }
 }
@@ -89,10 +94,10 @@ void thread_pool<T>::add_task(T *request) {
     task_queue_lock.unlock();
     has_work.post();
 }
-#endif // !_THREAD_POLL_H_
-
 
 template<typename T>
 void thread_pool<T>::stop_all() {
     stop = true;
 }
+
+#endif // !_THREAD_POLL_H_

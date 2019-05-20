@@ -1,12 +1,15 @@
 #include "httpd.h"
+#include "mission.h"
 #include <iostream>
+#include <unistd.h>
 
 using std::cout;
 using std::endl;
-
+ 
 int httpd::epfd = 0;
 
 httpd::httpd(int port) {
+    chroot(".");
     this->port = port;
     this->serverfd = Socket(AF_INET, SOCK_STREAM, 0);
     socklen_t addrlen = sizeof(struct sockaddr);
@@ -38,32 +41,26 @@ void httpd::start() {
         int event_num = epoll_wait(this->epfd, this->events, 500, 20);
         for(int i = 0; i < event_num; i++) {
             #ifdef DEBUG
-            cout <<"epoll :" << event_num<<endl;
+            cout <<"\033[31m epoll :" << event_num<<"\033[0m"<<endl;
             #endif // DEBUG
             if(events[i].data.fd == serverfd) {
                 // 新连接
-                #ifdef DEBUG
-                cout<<"新连接"<<endl;
-                #endif // DEBUG
                 clientfd = Accept(serverfd, (struct sockaddr*)&clientaddr, &clientlen);
                 ev.data.fd = clientfd;
                 ev.events = EPOLLIN | EPOLLET | EPOLLONESHOT;
                 Setnonblock(clientfd);
                 epoll_ctl(this->epfd, EPOLL_CTL_ADD, clientfd, &this->ev);
-            }else{
+                #ifdef DEBUG
+                cout << "\033[32m  新连接" << clientfd << "\033[0m" <<endl;
+                #endif // DEBUG
+            }else {
                 char test_char;
+
                 if(recv(ev.data.fd, &test_char, 1, MSG_PEEK) > 0) {
                     #ifdef DEBUG
-                    cout<<"新数据"<<endl;
+                    cout<<"\033[33m 新数据 " << ev.data.fd << "\033[0m"<<endl;
                     #endif // DEBUG
                     this->add_task(ev.data.fd);
-                }else {
-                    #ifdef DEBUG
-                    cout<<"有用户离开"<<endl;
-                    #endif // DEBUG
-                    ev.data.fd = events[i].data.fd;
-                    ev.events = EPOLLOUT;
-                    epoll_ctl(this->epfd, EPOLL_CTL_DEL, ev.data.fd, &ev);
                 }
             }
         }
@@ -74,11 +71,8 @@ void httpd::add_task(int clientfd) {
     #ifdef DEBUG
         cout<<"add_task begin"<<endl;
     #endif
-    int *arg = new int(clientfd);
-    pthread_t thid;
-    pthread_create(&thid, NULL, run, (void *)arg);
-}
 
+<<<<<<< HEAD
 void *httpd::run(void *arg) {
     int clientfd = *(int *)arg;
     char buf[2] = {0};
@@ -92,3 +86,8 @@ void *httpd::run(void *arg) {
     epoll_ctl(epfd, EPOLL_CTL_MOD, clientfd, &ev);
     return NULL;
 } 
+=======
+    mission *m = new mission(clientfd, epfd);
+    pool.add_task(m);
+}
+>>>>>>> 76e5cf8b3e041cf561d20b421834c41a770f486d

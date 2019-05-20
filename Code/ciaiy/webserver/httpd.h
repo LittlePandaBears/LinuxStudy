@@ -5,7 +5,8 @@
 
 #include "tool.h"
 #include <sys/epoll.h>
-#include <pthread.h>
+#include "thread_pool3.h"
+#include "mission.h"
 
 class httpd{
     public:
@@ -15,10 +16,10 @@ class httpd{
         static int epfd;
         int serverfd;
         int port = 2333;
+        thread_pool<mission> pool;
         struct sockaddr_in serveraddr;
         struct epoll_event ev, events[500];
-        static void *run(void *arg);
-        static void add_task(int clientfd);
+        void add_task(int clientfd);
 };
 
 #endif // !_HTTPD_H_
